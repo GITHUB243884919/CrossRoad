@@ -1,0 +1,28 @@
+fileFormatVersion: 2
+guid: 8cac745f6fb02f84c98656a42b22d9d1
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Alibaba Sans
+  fontNames:
+  - Alibaba Sans
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 2d284d2069d04dc4b9aacc4c74514d2a, type: 3}
+  - {fileID: 12800000, guid: 14a72794f31e3194baef52a28b48b595, type: 3}
+  - {fileID: 12800000, guid: 3d62b826a44dfca449b0ef973c3f88a6, type: 3}
+  - {fileID: 12800000, guid: 621de488fcedcbc42a5de607b899dd65, type: 3}
+  - {fileID: 12800000, guid: 1b103119a1d5ade4bb9e9017ddcf04c6, type: 3}
+  - {fileID: 12800000, guid: 6e7962da5f307864988ee5579db48ed7, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
