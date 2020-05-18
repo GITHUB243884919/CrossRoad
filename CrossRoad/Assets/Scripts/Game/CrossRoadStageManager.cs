@@ -31,10 +31,17 @@ namespace CrossRoadGame
         /// </summary>
         public float animalMoveSpeed = 5f;
 
-        /// <summary>
-        /// 按钮长按时间
-        /// </summary>
-        public float buttonClickLongPressTime = 0.3f;
+
+		public float animalAcceleration = 0.5f;
+
+		public float animalMaxSpeed = 10;
+
+		public float animalMinSpeed = 10;
+
+		/// <summary>
+		/// 按钮长按时间
+		/// </summary>
+		public float buttonClickLongPressTime = 0.3f;
 
         /// <summary>
         /// 是否开启碰撞

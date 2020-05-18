@@ -3,8 +3,10 @@ using Game.GlobalData;
 using Game.MessageCenter;
 using SWS;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UFrame;
+using UFrame.Common;
 using UFrame.EntityFloat;
 using UFrame.Logger;
 using UFrame.MessageCenter;
@@ -62,18 +64,14 @@ namespace CrossRoadGame
             }
         }
 
-        CrossRoadAnimalTeamModel animalTeamModel
-        {
-            get
-            {
+        CrossRoadAnimalTeamModel animalTeamModel {
+            get {
                 return CrossRoadModelManager.GetInstance().animalTeamModel;
             }
         }
 
-        RoadModel roadModel
-        {
-            get
-            {
+        RoadModel roadModel {
+            get {
                 return CrossRoadModelManager.GetInstance().roadModel;
             }
         }
@@ -81,10 +79,8 @@ namespace CrossRoadGame
         /// <summary>
         /// 当前路的第一个点
         /// </summary>
-        Vector3 firstPos
-        {
-            get
-            {
+        Vector3 firstPos {
+            get {
                 return roadModel.animalRoadSegment[animalTeamModel.currentRoad]
                     + Vector3.back * standardAnimalBoxSize.z * 0.8f;
             }
@@ -93,10 +89,8 @@ namespace CrossRoadGame
         /// <summary>
         /// 当前路下一条路的第一个点
         /// </summary>
-        Vector3 nextFirstPos
-        {
-            get
-            {
+        Vector3 nextFirstPos {
+            get {
                 return roadModel.animalRoadSegment[animalTeamModel.currentRoad + 1]
                     + Vector3.back * standardAnimalBoxSize.z * 0.8f;
             }
@@ -105,10 +99,8 @@ namespace CrossRoadGame
         /// <summary>
         /// 在下一条路上对应的队伍位置的点
         /// </summary>
-        Vector3 nextRoadPos
-        {
-            get
-            {
+        Vector3 nextRoadPos {
+            get {
                 return nextFirstPos + Vector3.back * standardAnimalBoxSize.z * idxInTeam;
             }
         }
@@ -116,19 +108,15 @@ namespace CrossRoadGame
         /// <summary>
         /// 最后一条路过马路后点
         /// </summary>
-        Vector3 lastRoadPos
-        {
-            get
-            {
+        Vector3 lastRoadPos {
+            get {
                 return roadModel.animalRoadSegment[roadModel.animalRoadSegment.Count - 1]
                     + Vector3.forward * standardAnimalBoxSize.z * 0.8f;
             }
         }
 
-        Vector3 preFirstPos
-        {
-            get
-            {
+        Vector3 preFirstPos {
+            get {
                 return roadModel.animalRoadSegment[animalTeamModel.currentRoad - 1]
                     + Vector3.back * standardAnimalBoxSize.z * 0.8f;
             }
@@ -136,16 +124,14 @@ namespace CrossRoadGame
         /// <summary>
         /// 获取当前配置的过马路文件 crossroadstageCell
         /// </summary>
-        Config.crossroadstageCell cellStage
-        {
-            get
-            {
+        Config.crossroadstageCell cellStage {
+            get {
                 int stageID = CrossRoadModelManager.GetInstance().stageID;
                 return Config.crossroadstageConfig.getInstace().getCell(stageID);
             }
         }
 
-        public void Init(float animalAnimationSpeed , float animalMoveSpeed, int idxInTeam)
+        public void Init(float animalAnimationSpeed, float animalMoveSpeed, int idxInTeam)
         {
             this.animalAnimationSpeed = animalAnimationSpeed;
             this.moveSpeed = animalMoveSpeed * 0.001f;
@@ -155,7 +141,7 @@ namespace CrossRoadGame
             arrivedLastPos = false;
             DebugFile.GetInstance().MarkGameObject(mainGameObject, "Animal-{0}", idxInTeam);
         }
-        
+
         public override void Active()
         {
             base.Active();
@@ -238,6 +224,7 @@ namespace CrossRoadGame
                             var animal = animalTeamModel.entityCrossRoadAnimalList[i];
                             animal.isMoving = false;
                             animal.isPassedRoad = false;
+                            animal.moveSpeed = 20 * 0.001f;
                             DebugFile.GetInstance().WriteKeyFile(string.Format("Animal-{0}", idxInTeam),
                                 "isMoving = false {0}, currentRoad={1}", 1, animalTeamModel.currentRoad);
                         }
@@ -291,8 +278,72 @@ namespace CrossRoadGame
                 return;
             }
 
-            position += Vector3.forward * moveSpeed * deltaTimeMS;
 
+            //position += Vector3.forward * moveSpeed * deltaTimeMS;
+
+            ////跨马路的时候速度最快
+            //if (IsPassed(firstPos))
+            //{
+            //    position += Vector3.forward * moveSpeed * deltaTimeMS;
+            //}
+            //else
+            //{
+            //    position += Vector3.forward * moveSpeed * 0.4f * deltaTimeMS;
+            //}
+
+            //跨马路的时候加速
+            if (IsPassed(firstPos))
+            {
+                //匀加速或者减速
+                float animalAcceleration = CrossRoadStageManager.GetInstance().animalAcceleration;
+                float animalMaxSpeed = CrossRoadStageManager.GetInstance().animalMaxSpeed;
+                float animalMinSpeed = CrossRoadStageManager.GetInstance().animalMinSpeed;
+
+                Vector3 old = Vector3.forward * moveSpeed * deltaTimeMS;
+                float delta = (moveSpeed + animalAcceleration * 0.001f) * deltaTimeMS;
+                float max = animalMaxSpeed * 0.001f * deltaTimeMS;
+                float min = animalMinSpeed * 0.001f * deltaTimeMS;
+                if (animalAcceleration > 0)
+                {
+                    delta = Mathf.Min(delta, max);
+                }
+                else
+                {
+                    delta = Mathf.Max(delta, min);
+                }
+                position += Vector3.forward * delta;
+                moveSpeed = delta / deltaTimeMS;
+            }
+            else
+            {
+                position += Vector3.forward * moveSpeed * deltaTimeMS;
+            }
+
+
+            ////前面的比后面的快
+            //float delta = moveSpeed * (1 - idxInTeam / 15f);
+            //position += Vector3.forward * delta * deltaTimeMS;
+            //Debug.LogErrorFormat("{0}, {1}, {2}", idxInTeam, moveSpeed, delta);			
+
+            ////匀加速或者减速
+            //float animalAcceleration = CrossRoadStageManager.GetInstance().animalAcceleration;
+            //float animalMaxSpeed = CrossRoadStageManager.GetInstance().animalMaxSpeed;
+            //float animalMinSpeed = CrossRoadStageManager.GetInstance().animalMinSpeed;
+
+            //Vector3 old = Vector3.forward * moveSpeed * deltaTimeMS;
+            //float delta = (moveSpeed + animalAcceleration * 0.001f) * deltaTimeMS;
+            //float max = animalMaxSpeed * 0.001f * deltaTimeMS;
+            //float min = animalMinSpeed * 0.001f * deltaTimeMS;
+            //if (animalAcceleration > 0) 
+            //{
+            //	delta = Mathf.Min(delta, max);
+            //}
+            //else 
+            //{
+            //	delta = Mathf.Max(delta, min);
+            //}
+            //position += Vector3.forward * delta;
+            //moveSpeed = delta / deltaTimeMS;
         }
 
         public override void OnDeathToPool()
@@ -367,7 +418,20 @@ namespace CrossRoadGame
             PlayWalk();
             //下一段路对应的位置
             targetPos = pos;
+
         }
+
+        //protected IEnumerator CoWaitAsync(Vector3 pos)
+        //{
+        //    //yield return RunCoroutine.WaitForEndOfFrame;
+        //    yield return new WaitForSeconds(0.01f);
+        //    isMoving = true;
+        //    DebugFile.GetInstance().WriteKeyFile(string.Format("Animal-{0}", idxInTeam),
+        //        "OnCrossRoadAnimalTeamMove {0}, currentRoad={1}", 2, animalTeamModel.currentRoad);
+        //    PlayWalk();
+        //    //下一段路对应的位置
+        //    targetPos = pos;
+        //}
 
         protected void OnCrossRoadAnimalTeamStopMove(Message msg)
         {
@@ -433,8 +497,7 @@ namespace CrossRoadGame
             UnityEvent SWS_Event = spm.events[2];
             SWS_Event.RemoveAllListeners();
             SWS_Event.AddListener(
-                delegate
-                {
+                delegate {
                     PlayPose();
                 }
             );
