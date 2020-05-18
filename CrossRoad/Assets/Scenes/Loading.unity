@@ -183,6 +183,9 @@ MonoBehaviour:
   TeststageID: -1
   animalAnimSpeed: 5
   animalMoveSpeed: 20
+  animalAcceleration: 0.5
+  animalMaxSpeed: 35
+  animalMinSpeed: 10
   buttonClickLongPressTime: 0.1
   isCollision: 0
   carStartOffsetX: 30
