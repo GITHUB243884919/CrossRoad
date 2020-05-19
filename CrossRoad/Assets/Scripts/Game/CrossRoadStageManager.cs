@@ -131,8 +131,8 @@ namespace CrossRoadGame
                 new CrossRoadCarModule(moduleOrderID++));
             gameModules.AddMoudle(
                 new CrossRoadMoveMovableEntityModule(moduleOrderID++));
-            gameModules.AddMoudle(
-                new CrossRoadAnimalTeamModule(moduleOrderID++));
+            //gameModules.AddMoudle(
+            //    new CrossRoadAnimalTeamModule(moduleOrderID++));
         }
 
         public void UnLoad()

@@ -224,7 +224,7 @@ namespace CrossRoadGame
                             var animal = animalTeamModel.entityCrossRoadAnimalList[i];
                             animal.isMoving = false;
                             animal.isPassedRoad = false;
-                            animal.moveSpeed = 20 * 0.001f;
+                            animal.moveSpeed = CrossRoadStageManager.GetInstance().animalMoveSpeed * 0.001f;
                             DebugFile.GetInstance().WriteKeyFile(string.Format("Animal-{0}", idxInTeam),
                                 "isMoving = false {0}, currentRoad={1}", 1, animalTeamModel.currentRoad);
                         }

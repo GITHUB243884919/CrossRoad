@@ -63,6 +63,7 @@ namespace CrossRoadGame
         
         void OnFingerDown(FingerDownEvent e)
         {
+            //Debug.LogError("OnFingerDown");
             if (!isCameraMoving && isFingerUp)
             {
                 isFingerUp = false;
@@ -76,7 +77,7 @@ namespace CrossRoadGame
         void OnLongPress(LongPressGesture gesture)
         {
             // 长按持续时间
-            //Debug.LogError("AAA=   长按     " + gesture.ElapsedTime);
+            //Debug.LogErrorFormat("OnLongPress {0}", gesture.ElapsedTime);
 
             if (!isCameraMoving && !isFingerUp)
             {

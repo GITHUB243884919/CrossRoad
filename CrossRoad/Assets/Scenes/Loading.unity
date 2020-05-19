@@ -182,9 +182,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TeststageID: -1
   animalAnimSpeed: 5
-  animalMoveSpeed: 20
-  animalAcceleration: 0.5
-  animalMaxSpeed: 35
+  animalMoveSpeed: 40
+  animalAcceleration: 1
+  animalMaxSpeed: 70
   animalMinSpeed: 10
   buttonClickLongPressTime: 0.1
   isCollision: 0
